@@ -384,16 +384,13 @@ router.post("/pago-exitoso", async (req, res) => {
     }
 
     // ===========================
-    // 7️⃣ Respuesta al front
+    // 7️⃣ Redirigir al perfil del usuario en el frontend
     // ===========================
-    res.json({
-      message: "Pago registrado correctamente",
-      ordenId: nuevaOrden.id,
-    });
+    res.redirect(`http://localhost:3000/usuario/perfil?ordenId=${nuevaOrden.id}&success=true`);
 
   } catch (error) {
     console.log("❌ Error en pago-exitoso:", error);
-    res.status(500).json({ error: error.message });
+    res.redirect('http://localhost:3000/usuario/perfil?success=false');
   }
 });
 
