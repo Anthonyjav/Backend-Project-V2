@@ -2,7 +2,7 @@
 const express = require('express');
 const axios = require('axios');
 const crypto = require('crypto');
-const { Orden, OrdenItem } = require('../models');
+const { Orden, OrdenItem, Carrito, CarritoItem } = require('../models');
 const router = express.Router();
 
 /* ============================
@@ -127,6 +127,7 @@ router.post('/form-token', async (req, res) => {
 /* ============================
    2️⃣ WEBHOOK (IPN)
    ============================ */
+ /*  
 router.post("/webhook", async (req, res) => {
   try {
     console.log('Content-Type:', req.headers['content-type']);
@@ -227,7 +228,7 @@ router.post("/webhook", async (req, res) => {
     return res.status(500).send("Webhook error");
   }
 });
-
+*/
 router.post("/resultado", async (req, res) => {
   try {
     const krAnswerRaw = req.body["kr-answer"] || "{}";
@@ -361,7 +362,29 @@ router.post("/pago-exitoso", async (req, res) => {
     console.log("🛒 ITEMS GUARDADOS:", Array.isArray(items) ? items.length : 0);
 
     // ===========================
-    // 6️⃣ Respuesta al front
+    // 6️⃣ Limpiar carrito del usuario
+    // ===========================
+    if (usuarioId) {
+      try {
+        const carrito = await Carrito.findOne({
+          where: { usuarioId: usuarioId, activo: true }
+        });
+
+        if (carrito) {
+          // Eliminar todos los items del carrito
+          await CarritoItem.destroy({
+            where: { carritoId: carrito.id }
+          });
+          console.log("🧹 CARRITO LIMPIADO para usuario:", usuarioId);
+        }
+      } catch (error) {
+        console.warn("⚠️ Error al limpiar carrito:", error.message);
+        // No bloquear la respuesta si hay error al limpiar carrito
+      }
+    }
+
+    // ===========================
+    // 7️⃣ Respuesta al front
     // ===========================
     res.json({
       message: "Pago registrado correctamente",
