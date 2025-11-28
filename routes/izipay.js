@@ -10,7 +10,7 @@ const router = express.Router();
    ============================ */
 const USER = "84426447";
 const PASS = "testpassword_kvARN8IKqaHBiXcz6WDpYhmqNWhWWLI5pHkH8ejFNLSfn";
-const HMAC_TEST = "RchKwjeyINw0fOWVikl0jrYiAevWsP0KRU535oYgIXNbx";
+const HMAC_TEST = "zoABMcpMIB5GGMdr7aKUEiGW3pRNZFp7uNZupxbuhvBe4";
 
 /* ============================
    Helper: extraer metadata robusta
