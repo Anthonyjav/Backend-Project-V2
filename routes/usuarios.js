@@ -124,7 +124,7 @@ router.post('/login', async (req, res) => {
 
 
 // 🔧 Editar un usuario
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, email, password, rol } = req.body;
 
@@ -135,12 +135,21 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
+    if (rol && req.user.rol !== 'admin') {
+      return res.status(403).json({
+        error: 'Solo el administrador puede cambiar el rol'
+      });
+    }
+
     const datosActualizados = {
       nombre: nombre || usuario.nombre,
       apellido: apellido || usuario.apellido,
       email: email || usuario.email,
-      rol: rol || usuario.rol
     };
+
+    if (rol && req.user.rol === 'admin') {
+      datosActualizados.rol = rol;
+    }
 
     if (password) {
       datosActualizados.password = await bcrypt.hash(password, 10);
@@ -149,12 +158,18 @@ router.put('/:id', async (req, res) => {
     await usuario.update(datosActualizados);
 
     const { password: pw, ...usuarioSinPassword } = usuario.toJSON();
-    res.json({ mensaje: 'Usuario actualizado', usuario: usuarioSinPassword });
+
+    res.json({
+      mensaje: 'Usuario actualizado',
+      usuario: usuarioSinPassword
+    });
+
   } catch (error) {
     console.error('Error al actualizar usuario:', error);
     res.status(500).json({ error: 'Error al actualizar usuario' });
   }
 });
+
 // Eliminar un usuario
 router.delete('/:id', async (req, res) => {
   try {
