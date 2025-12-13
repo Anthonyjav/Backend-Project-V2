@@ -103,73 +103,81 @@ router.get('/:id', async (req, res) => {
 });
 
 //Editar Producto
-router.put('/:id', upload.array('imagen', 10), async (req, res) => {
-  try {
-    const producto = await Producto.findByPk(req.params.id);
-    if (!producto) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+router.put(
+  '/:id',
+  auth,
+  hasRole('admin', 'employee'),
+  upload.array('imagen', 10),
+  async (req, res) => {
+    try {
+      const producto = await Producto.findByPk(req.params.id);
+      if (!producto) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+
+      const {
+        nombre,
+        descripcion,
+        precio,
+        categoriaId,
+        color,
+        talla,
+        cantidad,
+        composicion,
+        info,
+        cuidados,
+        seleccionado,
+      } = req.body;
+
+      const nuevasImagenes =
+        req.files && req.files.length > 0
+          ? req.files.map(file => file.path)
+          : producto.imagen;
+
+      await producto.update({
+        nombre,
+        descripcion,
+        precio,
+        imagen: nuevasImagenes,
+        categoriaId,
+        color,
+        talla,
+        cantidad,
+        composicion,
+        info,
+        cuidados,
+        seleccionado,
+      });
+
+      res.json(producto);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar el producto' });
     }
-
-    const {
-      nombre,
-      descripcion,
-      precio,
-      categoriaId,
-      color,
-      talla,
-      cantidad,
-      composicion,
-      info,
-      cuidados,
-      seleccionado,
-    } = req.body;
-
-    const nuevasImagenes = req.files && req.files.length > 0
-      ? req.files.map(file => file.path)
-      : producto.imagen;
-
-    await producto.update({
-      nombre,
-      descripcion,
-      precio,
-      imagen: nuevasImagenes,
-      categoriaId,
-      color,
-      talla,
-      cantidad,
-      composicion,
-      info,
-      cuidados,
-      seleccionado,
-    });
-
-    res.json(producto);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al actualizar el producto' });
   }
-});
-
-
+);
 
 
 //Eliminar Producto 
-router.delete('/:id', async (req, res) => {
-  try {
-    const producto = await Producto.findByPk(req.params.id);
-    if (!producto) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+router.delete(
+  '/:id',
+  auth,
+  hasRole('admin'),
+  async (req, res) => {
+    try {
+      const producto = await Producto.findByPk(req.params.id);
+      if (!producto) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+
+      await producto.destroy();
+      res.json({ mensaje: 'Producto eliminado correctamente' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar el producto' });
     }
-
-    await producto.destroy();
-    res.json({ mensaje: 'Producto eliminado correctamente' });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al eliminar el producto' });
   }
-});
-
+);
 
 
 module.exports = router;
