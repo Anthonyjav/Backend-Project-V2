@@ -98,7 +98,6 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    // 👉 aquí se genera el token
     const { password: pw, ...usuarioSinPassword } = usuario.toJSON();
 
     const token = jwt.sign(
@@ -110,7 +109,6 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1d' }
     );
 
-    // 👉 UNA sola respuesta
     res.json({
       usuario: usuarioSinPassword,
       token,

@@ -4,47 +4,55 @@ const { Producto, Categoria } = require('../models');
 const multer = require('multer');
 const path = require('path');
 const upload = require('../middlewares/upload');
+const hasRole = require('../middlewares/hasRole');
+const auth = require('../middlewares/auth');
 
 
-router.post('/', upload.array('imagen', 10), async (req, res) => {
-  try {
-    const {
-      nombre,
-      descripcion,
-      precio,
-      categoriaId,
-      color,
-      talla,
-      cantidad,
-      composicion,
-      info,
-      cuidados,
-      seleccionado  
-    } = req.body;
+router.post(
+  '/',
+  auth,
+  hasRole('admin', 'employee'),
+  upload.array('imagen', 10),
+  async (req, res) => {
+    try {
+      const {
+        nombre,
+        descripcion,
+        precio,
+        categoriaId,
+        color,
+        talla,
+        cantidad,
+        composicion,
+        info,
+        cuidados,
+        seleccionado,
+      } = req.body;
 
-    const imagenes = req.files ? req.files.map(file => file.path) : [];
+      const imagenes = req.files ? req.files.map(file => file.path) : [];
 
-    const nuevoProducto = await Producto.create({
-      nombre,
-      descripcion,
-      precio,
-      imagen: imagenes, 
-      categoriaId,
-      color,
-      talla,
-      cantidad,
-      composicion,
-      info,
-      cuidados,
-      seleccionado 
-    });
+      const nuevoProducto = await Producto.create({
+        nombre,
+        descripcion,
+        precio,
+        imagen: imagenes,
+        categoriaId,
+        color,
+        talla,
+        cantidad,
+        composicion,
+        info,
+        cuidados,
+        seleccionado,
+      });
 
-    res.status(201).json(nuevoProducto);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al crear producto' });
+      res.status(201).json(nuevoProducto);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al crear producto' });
+    }
   }
-});
+);
 
 
 router.get('/', async (req, res) => {
