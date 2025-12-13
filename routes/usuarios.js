@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { Usuario } = require('../models');
 const bcrypt = require('bcrypt');
+const auth = require('../middlewares/auth');
+const isAdmin = require('../middlewares/isAdmin');
+
 
 // Listar todos los usuarios
 router.get('/', async (req, res) => {
@@ -59,7 +62,7 @@ router.post('/', async (req, res) => {
       apellido,
       email,
       password: hashedPassword,
-      rol: rol || 'user',
+      rol: rol || 'admin',
     });
 
 
@@ -72,34 +75,47 @@ router.post('/', async (req, res) => {
   }
 });
 
+const jwt = require('jsonwebtoken');
+
 // Iniciar sesión (login)
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const emailNormalizado = email.toLowerCase().trim();
-    console.log('Email recibido:', emailNormalizado);
 
-    const usuario = await Usuario.findOne({ where: { email: emailNormalizado } });
+    const usuario = await Usuario.findOne({
+      where: { email: emailNormalizado },
+    });
 
     if (!usuario) {
-      console.log('No se encontró el usuario');
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    console.log('Usuario encontrado:', usuario.email);
-
     const isPasswordValid = await bcrypt.compare(password, usuario.password);
-    console.log('¿Password válida?', isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    // Eliminar la contraseña del objeto usuario
+    // 👉 aquí se genera el token
     const { password: pw, ...usuarioSinPassword } = usuario.toJSON();
 
-    res.json({ usuario: usuarioSinPassword });
+    const token = jwt.sign(
+      {
+        id: usuario.id,
+        rol: usuario.rol,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    // 👉 UNA sola respuesta
+    res.json({
+      usuario: usuarioSinPassword,
+      token,
+    });
+
   } catch (error) {
     console.error('Error en login:', error);
     res.status(500).json({ error: 'Error en el servidor' });
