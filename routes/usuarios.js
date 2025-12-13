@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
       apellido,
       email,
       password: hashedPassword,
-      rol: rol || 'admin',
+      rol: 'user',
     });
 
 
