@@ -123,7 +123,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-// 🔧 Editar un usuario
+
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, email, password, rol } = req.body;
@@ -171,7 +171,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // Eliminar un usuario
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const usuario = await Usuario.findByPk(id);
@@ -187,6 +187,7 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar usuario' });
   }
 });
+
 
 
 module.exports = router;
