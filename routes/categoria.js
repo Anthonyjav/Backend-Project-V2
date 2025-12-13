@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { Categoria, Producto } = require('../models');
-
+const hasRole = require('../middlewares/hasRole');
+const auth = require('../middlewares/auth');
 // Crear categoría
 router.post(
   '/',
