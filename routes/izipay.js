@@ -383,14 +383,12 @@ router.post("/pago-exitoso", async (req, res) => {
       }
     }
 
-    // ===========================
-    // 7️⃣ Redirigir al perfil del usuario en el frontend
-    // ===========================
-    res.redirect(`http://localhost:3000/usuario/perfil?ordenId=${nuevaOrden.id}&success=true`);
+   ////CAMBIAR RUTA https://frontend-project-p6uq.onrender.com/
+    res.redirect(`https://frontend-project-p6uq.onrender.com/usuario/perfil?ordenId=${nuevaOrden.id}&success=true`);
 
   } catch (error) {
     console.log("❌ Error en pago-exitoso:", error);
-    res.redirect('http://localhost:3000/usuario/perfil?success=false');
+    res.redirect('https://frontend-project-p6uq.onrender.com/usuario/perfil?success=false');
   }
 });
 
