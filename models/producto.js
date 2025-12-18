@@ -38,11 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     seleccionado: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    },
-    activo: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
+    }         
   }, {
     sequelize,
     modelName: 'Producto',

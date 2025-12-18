@@ -170,8 +170,8 @@ router.delete(
         return res.status(404).json({ error: 'Producto no encontrado' });
       }
 
-      await producto.update({ activo: false });
-      res.json({ mensaje: 'Producto desactivado correctamente' });
+      await producto.destroy();
+      res.json({ mensaje: 'Producto eliminado correctamente' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al eliminar el producto' });
