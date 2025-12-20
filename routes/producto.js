@@ -27,6 +27,7 @@ router.post(
         info,
         cuidados,
         seleccionado,
+        activo,
       } = req.body;
 
       const imagenes = req.files ? req.files.map(file => file.path) : [];
@@ -44,6 +45,7 @@ router.post(
         info,
         cuidados,
         seleccionado,
+        activo: activo !== undefined ? activo === 'true' : true,
       });
 
       res.status(201).json(nuevoProducto);
@@ -127,6 +129,7 @@ router.put(
         info,
         cuidados,
         seleccionado,
+        activo,
       } = req.body;
 
       const nuevasImagenes =
@@ -147,6 +150,8 @@ router.put(
         info,
         cuidados,
         seleccionado,
+        ...(activo !== undefined && { activo: activo === 'true' }),
+
       });
 
       res.json(producto);
