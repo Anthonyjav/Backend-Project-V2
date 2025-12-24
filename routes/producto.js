@@ -87,7 +87,6 @@ router.get('/seleccionados', async (req, res) => {
 
 
 
-// Obtener un producto por ID
 router.get('/:id', async (req, res) => {
   try {
     const producto = await Producto.findByPk(req.params.id, {
