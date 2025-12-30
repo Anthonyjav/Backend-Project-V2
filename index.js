@@ -58,6 +58,11 @@ app.use('/orden-items', require('./routes/ordenItem'));
 app.use('/reclamos', require('./routes/reclamo'));
 app.use('/api/izipay', require('./routes/izipay'));
 
+
+/// Rutas de inventario y categorías de inventario
+app.use('/categoria-inventario', require('./routes/categoriaInventario'));
+app.use('/inventario', require('./routes/inventarioProducto'));
+
 // Puerto
 const PORT = process.env.PORT || 3005;
 app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
