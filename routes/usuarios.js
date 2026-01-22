@@ -133,7 +133,7 @@ router.put('/:id', auth, async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    if (rol && req.user.rol !== 'admin') {
+    if (rol && req.user.rol !== 'user') {
       return res.status(403).json({
         error: 'Solo el administrador puede cambiar el rol'
       });
