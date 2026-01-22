@@ -145,7 +145,7 @@ router.put('/:id', auth, async (req, res) => {
       email: email || usuario.email,
     };
 
-    if (rol && req.user.rol === 'admin') {
+    if (rol && req.user.rol === 'user') {
       datosActualizados.rol = rol;
     }
 
