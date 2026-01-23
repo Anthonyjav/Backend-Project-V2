@@ -10,24 +10,22 @@ router.get('/', async (req, res) => {
   try {
     const ordenes = await Orden.findAll({
       include: [
-        {
-          model: OrdenItem,
-          as: 'items'
-        },
-        {
-          model: Usuario,
-          as: 'usuario'
-        }
+        { model: OrdenItem, as: 'items' },
+        { model: Usuario, as: 'usuario' }
       ],
       order: [['createdAt', 'DESC']]
     });
 
     res.json(ordenes);
   } catch (error) {
-    console.error('🔥 Error al obtener órdenes:', error);
-    res.status(500).json({ error: 'Error al obtener órdenes' });
+    console.error('ERROR REAL:', error);
+    res.status(500).json({
+      message: 'Error al obtener órdenes',
+      detalle: error.message
+    });
   }
 });
+
 
 
 router.get('/:id', async (req, res) => {
