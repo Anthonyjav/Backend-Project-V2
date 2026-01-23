@@ -49,11 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     total: DataTypes.DECIMAL(10,2),
     cuponCodigo: DataTypes.STRING,
 
-    orderIdIzipay: DataTypes.STRING,
-    transactionId: DataTypes.STRING,
-    paymentStatus: DataTypes.STRING,
-    paymentResponse: DataTypes.TEXT,
-    paymentDate: DataTypes.DATE,
+  
     orderidizipay: DataTypes.STRING,
     transactionid: DataTypes.STRING,
     paymentstatus: DataTypes.STRING,
