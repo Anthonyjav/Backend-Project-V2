@@ -316,31 +316,34 @@ router.post("/pago-exitoso", async (req, res) => {
     const customer = answer.customer.billingDetails;
 
     const nuevaOrden = await Orden.create({
-      usuarioId: usuarioId || null,
-      orderIdIzipay,
-      subtotal: amount / 100,
-      envio: 0,
-      total: amount / 100,
-      estado: "pagado",
+    usuarioId: usuarioId || null,
 
-      // Datos personales
-      nombre: customer.firstName,
-      apellido: customer.lastName,
-      email: answer.customer.email,
-      telefono: customer.phoneNumber,
-      pais: customer.country,
-      departamento: customer.state,
-      provincia: customer.city,
-      distrito: customer.city,
-      direccion: customer.address,
-      referencia: "",
+    // Totales
+    subtotal: amount / 100,
+    envio: 0,
+    total: amount / 100,
+    estado: "pagado",
 
-      // Info de pago
-      transactionId: transaction.uuid,
-      paymentStatus: transaction.status,
-      paymentResponse: JSON.stringify(answer),
-      paymentDate: transaction.creationDate || new Date(),
-    });
+    // Datos personales
+    nombre: customer.firstName,
+    apellido: customer.lastName,
+    email: answer.customer.email,
+    telefono: customer.phoneNumber,
+    pais: customer.country,
+    departamento: customer.state,
+    provincia: customer.city,
+    distrito: customer.city,
+    direccion: customer.address,
+    referencia: "",
+
+    // ✅ CAMPOS IZIPAY (NOMBRES CORRECTOS)
+    orderidizipay: orderIdIzipay,
+    transactionid: transaction.uuid,
+    paymentstatus: transaction.status,
+    paymentresponse: JSON.stringify(answer),
+    paymentdate: transaction.creationDate || new Date(),
+  });
+
 
     console.log("✅ ORDEN GUARDADA ID:", nuevaOrden.id);
 
