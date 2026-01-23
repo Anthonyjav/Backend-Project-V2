@@ -133,7 +133,7 @@ router.put('/:id', auth, async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    if (rol && req.user.rol !== 'user') {
+    if (rol && req.user.rol !== 'admin') {
       return res.status(403).json({
         error: 'Solo el administrador puede cambiar el rol'
       });
@@ -145,7 +145,7 @@ router.put('/:id', auth, async (req, res) => {
       email: email || usuario.email,
     };
 
-    if (rol && req.user.rol === 'user') {
+    if (rol && req.user.rol === 'admin') {
       datosActualizados.rol = rol;
     }
 
